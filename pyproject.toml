@@ -1,0 +1,22 @@
+[project]
+name = "sextortion-analysis"
+version = "0.1.0"
+description = "Clusterização e análise de grafo de endereços Bitcoin (subconjunto do dataset de sextortion)"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.26",
+    "pandas>=2.1",
+    "scikit-learn>=1.3",
+    "networkx>=3.2",
+    "matplotlib>=3.8",
+]
+
+[project.scripts]
+sextortion-analysis = "sextortion_analysis.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sextortion_analysis"]
