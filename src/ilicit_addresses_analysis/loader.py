@@ -3,6 +3,7 @@
 Cada arquivo tem o nome do endereço (sem extensão) e o conteúdo é a resposta
 paginada de um explorer: {"transactions": [...], "limit": 50, "offset": 0}.
 """
+
 from __future__ import annotations
 
 import json
@@ -36,7 +37,9 @@ class Dataset:
 
 def load_dataset(folder: str | Path, max_files: int | None = None) -> Dataset:
     folder = Path(folder)
-    files = sorted(p for p in folder.iterdir() if p.is_file() and not p.name.startswith("."))
+    files = sorted(
+        p for p in folder.iterdir() if p.is_file() and not p.name.startswith(".")
+    )
     if max_files:
         files = files[:max_files]
     if not files:
@@ -55,13 +58,13 @@ def load_dataset(folder: str | Path, max_files: int | None = None) -> Dataset:
         txs = data.get("transactions", []) if isinstance(data, dict) else data
         limit = data.get("limit") if isinstance(data, dict) else None
         seeds.append(
-            dict(
-                address=address,
-                file=p.name,
-                n_tx_file=len(txs),
-                limit=limit,
-                truncated=bool(limit and len(txs) >= limit),
-            )
+            {
+                "address": address,
+                "file": p.name,
+                "n_tx_file": len(txs),
+                "limit": limit,
+                "truncated": bool(limit and len(txs) >= limit),
+            }
         )
         for tx in txs:
             txid = tx.get("txId") or tx.get("txid")
@@ -72,48 +75,48 @@ def load_dataset(folder: str | Path, max_files: int | None = None) -> Dataset:
             weight = tx.get("weight") or (tx.get("size") or 0) * 4
             fee = tx.get("fee") or 0
             tx_rows.append(
-                dict(
-                    txid=txid,
-                    block_height=tx.get("blockHeight"),
-                    time=tx.get("time"),
-                    fee=fee,
-                    size=tx.get("size"),
-                    weight=weight,
-                    fee_rate=fee / (weight / 4) if weight else 0.0,
-                    rbf=bool(tx.get("rbf")),
-                    version=tx.get("version"),
-                    locktime=tx.get("locktime"),
-                    n_in=len(ins),
-                    n_out=len(outs),
-                    total_in=sum(i.get("value") or 0 for i in ins),
-                    total_out=sum(o.get("value") or 0 for o in outs),
-                )
+                {
+                    "txid": txid,
+                    "block_height": tx.get("blockHeight"),
+                    "time": tx.get("time"),
+                    "fee": fee,
+                    "size": tx.get("size"),
+                    "weight": weight,
+                    "fee_rate": fee / (weight / 4) if weight else 0.0,
+                    "rbf": bool(tx.get("rbf")),
+                    "version": tx.get("version"),
+                    "locktime": tx.get("locktime"),
+                    "n_in": len(ins),
+                    "n_out": len(outs),
+                    "total_in": sum(i.get("value") or 0 for i in ins),
+                    "total_out": sum(o.get("value") or 0 for o in outs),
+                }
             )
             for i in ins:
                 io_rows.append(
-                    dict(
-                        txid=txid,
-                        role="in",
-                        address=i.get("address"),
-                        value=i.get("value") or 0,
-                        ref_txid=i.get("txid"),
-                        ref_out=i.get("output"),
-                        spent=None,
-                        pos=None,
-                    )
+                    {
+                        "txid": txid,
+                        "role": "in",
+                        "address": i.get("address"),
+                        "value": i.get("value") or 0,
+                        "ref_txid": i.get("txid"),
+                        "ref_out": i.get("output"),
+                        "spent": None,
+                        "pos": None,
+                    }
                 )
             for k, o in enumerate(outs):
                 io_rows.append(
-                    dict(
-                        txid=txid,
-                        role="out",
-                        address=o.get("address"),
-                        value=o.get("value") or 0,
-                        ref_txid=None,
-                        ref_out=None,
-                        spent=o.get("spent"),
-                        pos=k,
-                    )
+                    {
+                        "txid": txid,
+                        "role": "out",
+                        "address": o.get("address"),
+                        "value": o.get("value") or 0,
+                        "ref_txid": None,
+                        "ref_out": None,
+                        "spent": o.get("spent"),
+                        "pos": k,
+                    }
                 )
 
     return Dataset(

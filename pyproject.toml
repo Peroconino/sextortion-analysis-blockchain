@@ -1,5 +1,5 @@
 [project]
-name = "sextortion-analysis"
+name = "ilicit_addresses_analysis"
 version = "0.1.0"
 description = "Clusterização e análise de grafo de endereços Bitcoin (subconjunto do dataset de sextortion)"
 requires-python = ">=3.10"
@@ -12,11 +12,9 @@ dependencies = [
 ]
 
 [project.scripts]
-sextortion-analysis = "sextortion_analysis.cli:main"
+sextortion-analysis = "ilicit_addresses_analysis.cli:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/sextortion_analysis"]
