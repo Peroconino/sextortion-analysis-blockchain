@@ -2,13 +2,16 @@
 
 Clusterização + análise de grafo de endereços Bitcoin (um arquivo JSON por endereço em `addresses/`).
 
-## Uso
+Pra rodar o código, instale o package manager uv:
 ```bash
-uv add numpy pandas scikit-learn networkx matplotlib   # se ainda não tiver
-uv run sextortion-analysis --addresses addresses --out results
-# teste rápido: --max-files 200 | forçar k: --k 4 | método principal: --primary dbscan
-# incluir métricas de grafo na clusterização: --with-graph-features
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
-Sem o script instalado: `uv run python -m sextortion_analysis.cli ...`
+Instale as dependencias:
+```bash
+uv sync
 
-Saída em `results/`: `report.md` (cole na conversa), `summary.json`, CSVs, PNGs e GEXF (Gephi).
+```
+Rode o projeto:
+```bash
+uv run sextortion-analysis --addresses addresses --out out 
+```
